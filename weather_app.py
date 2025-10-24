@@ -185,39 +185,7 @@ if API_KEY:
         else:
             st.error("API 키가 설정되지 않았습니다. .env 또는 secrets.toml을 확인하세요.")
 
-        elif menu == "주간날씨":
-            st.subheader(f"{selected_subregion}의 주간 날씨 (최대 5일치)")
-            # 주간 예보: OpenWeather의 forecast API 사용
-            # 도시의 위도/경도 정보가 필요하므로, 현재 날씨 데이터에서 추출
-            if 'coord' in data:
-                lat, lon = data['coord']['lat'], data['coord']['lon']
-                forecast = fetch_forecast(lat, lon, API_KEY)
-                if forecast and 'list' in forecast:
-                    # 3시간 단위 예보를 날짜별로 집계
-                    import datetime
-                    from collections import defaultdict
-                    daily = defaultdict(list)
-                    for entry in forecast['list']:
-                        dt = datetime.datetime.fromtimestamp(entry['dt'])
-                        date_str = dt.strftime('%Y-%m-%d')
-                        daily[date_str].append(entry)
-                    if API_KEY:
-                        data = fetch_weather(city_en, API_KEY)
-                        if data:
-                            weather_desc = data['weather'][0]['description']
-                            temp = data['main'].get('temp') if 'main' in data else None
-                            bg_img = get_background_image(weather_desc, temp)
-                            emoji = get_weather_emoji(weather_desc)
-                            rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
-                            rain_emoji = '🌧️' if rain_amount > 0 else ''
-                            weather_line = f"날씨: {weather_desc} {emoji}"
-                            if rain_amount > 0:
-                                weather_line += f" / 강수량: {rain_amount}mm {rain_emoji}"
-
-                            if menu == "오늘날씨":
-                                st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
-                                st.subheader(f"{selected_subregion}의 현재 날씨")
-                                if bg_img:
+        # 중복된 elif menu == "주간날씨": 블록 제거
                                     st.image(bg_img, width=120)
                                 st.write(weather_line)
                                 st.write(f"풍속: {data['wind']['speed']} m/s")
