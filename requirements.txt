@@ -1,0 +1,6 @@
+streamlit
+dotenv
+python-dotenv
+requests
+pandas
+geocoder
