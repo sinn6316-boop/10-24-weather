@@ -65,213 +65,8 @@ region_map = {
     },
     "제주도": {
         "제주시": "Jeju", "서귀포시": "Seogwipo"
-    }
-}
-
-
-# 환경변수에서 API 키 불러오기
-import datetime
-from dotenv import load_dotenv
-load_dotenv()
-import os
-API_KEY = os.getenv("OPENWEATHER_API_KEY")
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
-
-# 상단 제목은 위에서 이미 선언됨
-st.sidebar.title("메뉴")
-menu = st.sidebar.selectbox("메뉴 선택", ["오늘 날씨", "주간 날씨", "온도별 옷차림"])
-if menu != "온도별 옷차림":
-    st.write("한국 주요 도시를 선택하거나 직접 입력하세요.")
-    region_list = list(region_map.keys())
-    selected_region = st.selectbox("지역 선택", region_list)
-    subregion_list = list(region_map[selected_region].keys())
-    selected_subregion = st.selectbox(f"{selected_region} 내 구/시 선택", subregion_list)
-    custom_city = st.text_input("직접 도시 입력 (한글)", "")
-    use_location = st.checkbox("현재 위치 기준으로 보기 (IP 기반)")
-
-def get_clothes_emoji(recommend):
-    if "반팔" in recommend or "민소매" in recommend:
-        return "👕🩳"
-    elif "긴팔" in recommend or "니트" in recommend or "가디건" in recommend or "청바지" in recommend:
-        return "👚👖"
-    elif "자켓" in recommend or "코트" in recommend:
-        return "🧥"
-    elif "패딩" in recommend or "내복" in recommend or "방한용품" in recommend:
-        return "🧥🧣"
-    else:
-        return "🧢"
-
-def get_clothes_recommendation(temp):
-    if temp >= 28:
-        return "매우 더움: 반팔, 반바지, 민소매"
-    elif temp >= 23:
-        return "더움: 반팔, 얇은 셔츠, 반바지"
-    elif temp >= 20:
-        return "따뜻함: 긴팔, 얇은 가디건"
-    elif temp >= 17:
-        return "선선함: 얇은 니트, 가디건, 청바지"
-    elif temp >= 12:
-        return "조금 추움: 자켓, 가디건, 맨투맨"
-    elif temp >= 9:
-        return "추움: 코트, 가죽자켓, 히트텍"
-    elif temp >= 5:
-        return "매우 추움: 두꺼운 코트, 목도리"
-    else:
-        return "한파: 패딩, 내복, 방한용품"
-
-
-# 함수 정의 이후, 최상위에서 메뉴 분기
-# 온도별 옷차림 표 데이터 및 함수
-def get_clothes_table():
-    table = [
-        {"온도 범위": "-10°C 이하", "옷차림": "패딩, 내복, 방한용품", "이모지": "🧥🧣"},
-        {"온도 범위": "-9°C ~ 0°C", "옷차림": "두꺼운 코트, 목도리", "이모지": "🧥🧣"},
-        {"온도 범위": "1°C ~ 4°C", "옷차림": "코트, 가죽자켓, 히트텍", "이모지": "🧥"},
-        {"온도 범위": "5°C ~ 8°C", "옷차림": "자켓, 가디건, 맨투맨", "이모지": "🧥"},
-        {"온도 범위": "9°C ~ 11°C", "옷차림": "얇은 니트, 가디건, 청바지", "이모지": "👚👖"},
-        {"온도 범위": "12°C ~ 16°C", "옷차림": "긴팔, 얇은 가디건", "이모지": "👚👖"},
-        {"온도 범위": "17°C ~ 19°C", "옷차림": "더움: 반팔, 얇은 셔츠, 반바지", "이모지": "👕🩳"},
-        {"온도 범위": "20°C ~ 22°C", "옷차림": "매우 더움: 반팔, 반바지, 민소매", "이모지": "👕🩳"},
-        {"온도 범위": "23°C 이상", "옷차림": "민소매, 반팔, 반바지", "이모지": "👕🩳"}
-    ]
-    df = pd.DataFrame(table)
-    return df
-if menu == "온도별 옷차림":
-    st.subheader("온도별 옷차림")
-    clothes_df = get_clothes_table()
-    # 온도별 색상 매핑 (노랑~하늘색 그라데이션)
-    temp_colors = [
-        "#4FC3F7",  # -10°C 이하 (차가운 하늘색)
-        "#81D4FA",  # -9~0°C
-        "#B3E5FC",  # 1~4°C
-        "#B2EBF2",  # 5~8°C
-        "#FFE082",  # 9~11°C (연노랑)
-        "#FFD54F",  # 12~16°C (노랑)
-        "#FFCA28",  # 17~19°C (진노랑)
-        "#FFB300",  # 20~22°C (따스한 노랑)
-        "#FFA000"   # 23°C 이상 (따뜻한 오렌지)
-    ]
-    def style_row(row):
-        idx = row.name
-        color = temp_colors[idx] if idx < len(temp_colors) else "#FFB300"
-        return [
-            f'color:{color}; font-family:Comic Sans MS, Arial,sans-serif; font-size:16px; font-weight:bold;' for _ in row
-        ]
-    styled = clothes_df.style.apply(style_row, axis=1)
-    st.markdown("""
-    <style>
-    .clothes-table table {
-        width: 100% !important;
-        table-layout: auto !important;
-    }
-    .clothes-table td, .clothes-table th {
-        font-size: 16px !important;
-        font-family: Comic Sans MS, Arial, sans-serif !important;
-        font-weight: bold !important;
-        white-space: nowrap !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    st.write(f'<div class="clothes-table">{styled.to_html(escape=False, index=False)}</div>', unsafe_allow_html=True)
-# 온도별 옷차림 표 데이터 및 함수
-def get_clothes_table():
-    table = [
-        {"온도 범위": "-10°C 이하", "옷차림": "패딩, 내복, 방한용품", "이모지": "🧥🧣"},
-        {"온도 범위": "-9°C ~ 0°C", "옷차림": "두꺼운 코트, 목도리", "이모지": "🧥🧣"},
-        {"온도 범위": "1°C ~ 4°C", "옷차림": "코트, 가죽자켓, 히트텍", "이모지": "🧥"},
-        {"온도 범위": "5°C ~ 8°C", "옷차림": "자켓, 가디건, 맨투맨", "이모지": "🧥"},
-        {"온도 범위": "9°C ~ 11°C", "옷차림": "얇은 니트, 가디건, 청바지", "이모지": "👚👖"},
-        {"온도 범위": "12°C ~ 16°C", "옷차림": "긴팔, 얇은 가디건", "이모지": "👚👖"},
-        {"온도 범위": "17°C ~ 19°C", "옷차림": "더움: 반팔, 얇은 셔츠, 반바지", "이모지": "👕🩳"},
-        {"온도 범위": "20°C ~ 22°C", "옷차림": "매우 더움: 반팔, 반바지, 민소매", "이모지": "👕🩳"},
-        {"온도 범위": "23°C 이상", "옷차림": "민소매, 반팔, 반바지", "이모지": "👕🩳"}
-    ]
-    df = pd.DataFrame(table)
-    return df
-if menu == "오늘 날씨":
-    if st.button("날씨 보기"):
-        if use_location:
-            g = geocoder.ip('me')
-            lat, lon = g.latlng if g.latlng else (37.5665, 126.9780)  # 기본값: 서울
-            params = {
-                "lat": lat,
-                "lon": lon,
-                "appid": API_KEY,
-                "units": "metric",
-                "lang": "kr"
-            }
-            response = requests.get(BASE_URL, params=params)
-            city_label = f"현재 위치({lat:.2f}, {lon:.2f})"
-        else:
-            if custom_city:
-                city_kr = custom_city
-                city_en = custom_city
-            else:
-                city_kr = f"{selected_region} {selected_subregion}"
-                city_en = region_map[selected_region][selected_subregion]
-            params = {
-                "q": city_en,
-                "appid": API_KEY,
-                "units": "metric",
-                "lang": "kr"
-            }
-            response = requests.get(BASE_URL, params=params)
-            # 만약 구/군 단위 요청 실패 시, 시/도 단위로 재요청
-            if response.status_code != 200:
-                params["q"] = selected_region
-                response = requests.get(BASE_URL, params=params)
-                city_label = selected_region
-                # 시/도 단위도 실패하면 대표 도시로 재요청
-                if response.status_code != 200:
-                    region_fallback = {
-                        "경상북도": "Pohang",
-                        "경상남도": "Changwon",
-                        "강원도": "Chuncheon",
-                        "충청북도": "Cheongju",
-                        "충청남도": "Cheonan",
-                        "전라북도": "Jeonju",
-                        "전라남도": "Mokpo",
-                        "제주도": "Jeju",
-                        "경기도": "Suwon",
-                        "서울": "Seoul",
-                        "부산": "Busan",
-                        "대구": "Daegu",
-                        "인천": "Incheon",
-                        "광주": "Gwangju",
-                        "대전": "Daejeon",
-                        "울산": "Ulsan",
-                        "세종": "Sejong"
-                    }
-                    fallback_city = region_fallback.get(selected_region, "Seoul")
-                    params["q"] = fallback_city
-                    response = requests.get(BASE_URL, params=params)
-                    city_label = fallback_city
-            # 응답 데이터에서 실제 도시명 표시
-            if response.status_code == 200:
-                data = response.json()
-                city_label = data.get('name', params["q"])
-            else:
-                city_label = params["q"]
-        if response.status_code == 200:
-            data = response.json()
-            weather_desc = data['weather'][0]['description']
-            temp = data['main'].get('temp') if 'main' in data else None
-            bg_img = get_background_image(weather_desc, temp)
-            # 배경 이미지 CSS 적용
-            st.markdown(f"""
-                <style>
-                .stApp {{
-                    background: url('{bg_img}') no-repeat center center fixed;
-                    background-size: cover;
-                }}
-                .weather-box {{
-                    background: rgba(255,255,255,0.85);
-                    border-radius: 16px;
-                    padding: 24px;
-                    margin-bottom: 24px;
-                    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-                }}
-                </style>
+        }
+                # CSS for background and weather box is injected via st.markdown string above
             """, unsafe_allow_html=True)
             emoji = get_weather_emoji(weather_desc)
             # 강수량 정보 추출
@@ -364,14 +159,14 @@ if menu == "오늘 날씨":
                 if '옷차림 추천' in styled_df.columns:
                     styled_df['옷차림 추천'] = styled_df['옷차림 추천'].apply(cute_clothes)
                 # 표 가로 길이 늘리고 글씨 크기 줄이기 (CSS 적용)
-                st.markdown("""
-                <style>
-                .wide-table table {
-                    width: 100% !important;
-                    table-layout: auto !important;
-                }
-                .wide-table td, .wide-table th {
-                    font-size: 13px !important;
+                st.markdown('''
+<style>
+.wide-table table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+.wide-table td, .wide-table th {
+    font-size: 13px !important;
                     white-space: nowrap !important;
                 }
                 .wide-table td.weather-col {
