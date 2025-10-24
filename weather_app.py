@@ -48,33 +48,6 @@ region_map = {
     "인천": {
         "연수구": "Yeonsu-gu", "남동구": "Namdong-gu", "부평구": "Bupyeong-gu", "서구": "Seo-gu", "중구": "Jung-gu", "동구": "Dong-gu", "계양구": "Gyeyang-gu", "미추홀구": "Michuhol-gu", "강화군": "Ganghwa-gun", "옹진군": "Ongjin-gun"
     },
-    "경기도": {
-        "수원시": "Suwon", "고양시": "Goyang", "성남시": "Seongnam", "용인시": "Yongin", "부천시": "Bucheon", "안양시": "Anyang", "평택시": "Pyeongtaek", "의정부시": "Uijeongbu", "광명시": "Gwangmyeong", "하남시": "Hanam", "남양주시": "Namyangju", "파주시": "Paju", "시흥시": "Siheung", "김포시": "Gimpo", "광주시": "Gwangju", "군포시": "Gunpo", "오산시": "Osan", "이천시": "Icheon", "안성시": "Anseong", "구리시": "Guri", "안산시": "Ansan", "양주시": "Yangju", "포천시": "Pocheon", "동두천시": "Dongducheon", "여주시": "Yeoju", "연천군": "Yeoncheon-gun", "가평군": "Gapyeong-gun", "양평군": "Yangpyeong-gun"
-    },
-    "부산": {
-        "해운대구": "Haeundae-gu", "수영구": "Suyeong-gu", "동래구": "Dongnae-gu", "부산진구": "Busanjin-gu", "남구": "Nam-gu", "북구": "Buk-gu", "사하구": "Saha-gu", "서구": "Seo-gu", "동구": "Dong-gu", "중구": "Jung-gu", "영도구": "Yeongdo-gu", "금정구": "Geumjeong-gu", "강서구": "Gangseo-gu", "연제구": "Yeonje-gu", "기장군": "Gijang-gun"
-    },
-    "대구": {
-        "수성구": "Suseong-gu", "동구": "Dong-gu", "서구": "Seo-gu", "남구": "Nam-gu", "북구": "Buk-gu", "중구": "Jung-gu", "달서구": "Dalseo-gu", "달성군": "Dalseong-gun"
-    },
-    "광주": {
-        "동구": "Dong-gu", "서구": "Seo-gu", "남구": "Nam-gu", "북구": "Buk-gu", "광산구": "Gwangsan-gu"
-    },
-    "대전": {
-        "동구": "Dong-gu", "중구": "Jung-gu", "서구": "Seo-gu", "유성구": "Yuseong-gu", "대덕구": "Daedeok-gu"
-    },
-    "울산": {
-        "중구": "Jung-gu", "남구": "Nam-gu", "동구": "Dong-gu", "북구": "Buk-gu", "울주군": "Ulju-gun"
-    },
-    "세종": {
-        "세종시": "Sejong"
-    },
-    "강원도": {
-        "춘천시": "Chuncheon", "원주시": "Wonju", "강릉시": "Gangneung", "동해시": "Donghae", "태백시": "Taebaek", "속초시": "Sokcho", "삼척시": "Samcheok", "홍천군": "Hongcheon-gun", "횡성군": "Hoengseong-gun", "영월군": "Yeongwol-gun", "평창군": "Pyeongchang-gun", "정선군": "Jeongseon-gun", "철원군": "Cheorwon-gun", "화천군": "Hwacheon-gun", "양구군": "Yanggu-gun", "인제군": "Inje-gun", "고성군": "Goseong-gun", "양양군": "Yangyang-gun"
-    },
-    "충청북도": {
-        "청주시": "Cheongju", "충주시": "Chungju", "제천시": "Jecheon", "보은군": "Boeun-gun", "옥천군": "Okcheon-gun", "영동군": "Yeongdong-gun", "증평군": "Jeungpyeong-gun", "진천군": "Jincheon-gun", "괴산군": "Goesan-gun", "음성군": "Eumseong-gun", "단양군": "Danyang-gun"
-    },
     "충청남도": {
         "천안시": "Cheonan", "공주시": "Gongju", "보령시": "Boryeong", "아산시": "Asan", "서산시": "Seosan", "논산시": "Nonsan", "계룡시": "Gyeryong", "당진시": "Dangjin", "금산군": "Geumsan-gun", "부여군": "Buyeo-gun", "서천군": "Seocheon-gun", "청양군": "Cheongyang-gun", "홍성군": "Hongseong-gun", "예산군": "Yesan-gun", "태안군": "Taean-gun"
     },
