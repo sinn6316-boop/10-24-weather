@@ -1,9 +1,14 @@
 import os
-
 import streamlit as st
+import pandas as pd
+# Import feature modules
+from region_map import region_map
+from weather_api import fetch_weather, fetch_forecast
+from clothes import get_clothes_recommendation, get_clothes_emoji
+from ui_helpers import get_background_image, get_weather_emoji
+
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
-
 
 # --- Main Streamlit App Logic ---
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
