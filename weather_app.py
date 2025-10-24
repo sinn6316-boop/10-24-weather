@@ -70,12 +70,29 @@ if API_KEY:
             st.markdown("</div>", unsafe_allow_html=True)
 
         elif menu == "오늘의 옷차림":
-            st.subheader(f"{selected_subregion} 오늘의 옷차림 추천")
-            clothes = get_clothes_recommendation(temp) if temp is not None else None
-            if clothes:
-                st.markdown(f'<div style="font-family:Comic Sans MS, Arial,sans-serif;font-size:22px;color:#FFB300;font-weight:bold;background:#FFF3CD;border-radius:8px;padding:16px;margin-bottom:10px;">{clothes} {get_clothes_emoji(clothes)}</div>', unsafe_allow_html=True)
-            else:
-                st.info("기온 정보가 부족해 옷차림 추천이 어렵습니다.")
+            st.subheader("온도별 옷차림 추천표")
+            # 온도 구간별 옷차림 데이터
+            temp_clothes = [
+                {"구간": "-10°C 이하", "추천": "패딩, 두꺼운 코트, 목도리, 기모바지", "color": "#4FC3F7"},
+                {"구간": "-9°C ~ 0°C", "추천": "패딩, 코트, 니트, 기모바지", "color": "#64B5F6"},
+                {"구간": "1°C ~ 4°C", "추천": "코트, 가죽자켓, 히트텍, 니트, 청바지", "color": "#90CAF9"},
+                {"구간": "5°C ~ 8°C", "추천": "자켓, 트렌치코트, 야상, 니트, 청바지", "color": "#BBDEFB"},
+                {"구간": "9°C ~ 11°C", "추천": "자켓, 가디건, 야상, 청바지, 면바지", "color": "#FFE082"},
+                {"구간": "12°C ~ 16°C", "추천": "자켓, 가디건, 야상, 청바지, 면바지", "color": "#FFD54F"},
+                {"구간": "17°C ~ 19°C", "추천": "얇은 니트, 맨투맨, 가디건, 청바지", "color": "#FFB300"},
+                {"구간": "20°C ~ 22°C", "추천": "긴팔, 얇은 가디건, 면바지", "color": "#FFA000"},
+                {"구간": "23°C ~ 27°C", "추천": "반팔, 얇은 셔츠, 얇은 바지, 면바지", "color": "#FF8F00"},
+                {"구간": "28°C 이상", "추천": "민소매, 반팔, 반바지, 원피스", "color": "#FF6F00"}
+            ]
+            # 표 출력
+            st.markdown('<style>.clothes-table td, .clothes-table th {text-align:center; font-family:Comic Sans MS, Arial,sans-serif; font-size:18px;}</style>', unsafe_allow_html=True)
+            table_html = '<table class="clothes-table" style="width:100%; border-collapse:collapse;">'
+            table_html += '<tr><th>온도 구간</th><th>추천 옷차림</th></tr>'
+            for row in temp_clothes:
+                table_html += f'<tr><td style="color:{row["color"]}; font-weight:bold;">{row["구간"]}</td>'
+                table_html += f'<td style="color:{row["color"]};">{row["추천"]}</td></tr>'
+            table_html += '</table>'
+            st.markdown(table_html, unsafe_allow_html=True)
 
         elif menu == "주간날씨":
             st.subheader(f"{selected_subregion}의 주간 날씨 (최대 5일치)")
