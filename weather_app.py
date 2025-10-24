@@ -18,32 +18,6 @@ selected_region = st.selectbox("지역 선택", region_list)
 subregion_list = list(region_map[selected_region].keys())
 selected_subregion = st.selectbox("도시/구 선택", subregion_list)
 
-city_en = region_map[selected_region][selected_subregion]
-
-if API_KEY:
-    data = fetch_weather(city_en, API_KEY)
-    if data:
-        weather_desc = data['weather'][0]['description']
-        temp = data['main'].get('temp') if 'main' in data else None
-        bg_img = get_background_image(weather_desc, temp)
-        emoji = get_weather_emoji(weather_desc)
-    rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
-import os
-import streamlit as st
-import pandas as pd
-# Import feature modules
-from region_map import region_map
-from weather_api import fetch_weather, fetch_forecast
-from clothes import get_clothes_recommendation, get_clothes_emoji
-from ui_helpers import get_background_image, get_weather_emoji
-
-# --- Main Streamlit App Logic ---
-API_KEY = os.getenv("OPENWEATHER_API_KEY")
-
-region_list = list(region_map.keys())
-selected_region = st.selectbox("지역 선택", region_list)
-subregion_list = list(region_map[selected_region].keys())
-selected_subregion = st.selectbox("도시/구 선택", subregion_list)
 
 city_en = region_map[selected_region][selected_subregion]
 
