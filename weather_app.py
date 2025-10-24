@@ -95,6 +95,7 @@ region_map = {
     }
 }
 
+
 # 환경변수에서 API 키 불러오기
 import datetime
 from dotenv import load_dotenv
@@ -103,7 +104,7 @@ import os
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
- # 상단 제목은 위에서 이미 선언됨
+# 상단 제목은 위에서 이미 선언됨
 st.sidebar.title("메뉴")
 menu = st.sidebar.selectbox("메뉴 선택", ["오늘 날씨", "주간 날씨", "온도별 옷차림"])
 if menu != "온도별 옷차림":
@@ -113,12 +114,7 @@ if menu != "온도별 옷차림":
     subregion_list = list(region_map[selected_region].keys())
     selected_subregion = st.selectbox(f"{selected_region} 내 구/시 선택", subregion_list)
     custom_city = st.text_input("직접 도시 입력 (한글)", "")
-
-use_location = st.checkbox("현재 위치 기준으로 보기 (IP 기반)")
-region_map = {
-region_list = list(region_map.keys())
-if menu != "온도별 옷차림":
-    region_list = list(region_map.keys())
+    use_location = st.checkbox("현재 위치 기준으로 보기 (IP 기반)")
 
 def get_clothes_emoji(recommend):
     if "반팔" in recommend or "민소매" in recommend:
