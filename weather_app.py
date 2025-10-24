@@ -113,7 +113,7 @@ else:
             temp = data['main'].get('temp') if 'main' in data else None
             bg_img = get_background_image(weather_desc, temp)
             emoji = get_weather_emoji(weather_desc)
-            rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
+        rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
             rain_emoji = '🌧️' if rain_amount > 0 else ''
             weather_line = f"날씨: {weather_desc} {emoji}"
             if rain_amount > 0:
