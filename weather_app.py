@@ -11,7 +11,7 @@ from ui_helpers import get_background_image, get_weather_emoji
 # 사이드바 메뉴 복원
 
 st.sidebar.title("메뉴")
-menu = st.sidebar.selectbox("사이드 메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
+menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
 
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
