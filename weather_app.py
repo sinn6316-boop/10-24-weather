@@ -62,11 +62,11 @@ elif menu == "오늘날씨":
                 rain_amount = data.get('rain', {}).get('1h', 0)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
                 info = {
-                    '온도(°C)': temp if temp is not None else "정보 없음",
-                    '체감온도(°C)': feels_like if feels_like is not None else "정보 없음",
-                    '습도(%)': humidity if humidity is not None else "정보 없음",
+                    '온도(°C) 🌡️': f"{temp} 🌡️" if temp is not None else "정보 없음",
+                    '체감온도(°C)': f"{feels_like} 🌡️" if feels_like is not None else "정보 없음",
+                    '습도(%) 💧': f"{humidity} 💧" if humidity is not None else "정보 없음",
                     '날씨': f"{weather_desc} {emoji}" if weather_desc else "정보 없음",
-                    '강수량(1시간, mm)': rain_amount if rain_amount is not None else "정보 없음"
+                    '강수량(1시간, mm) 🌧️': f"{rain_amount} 🌧️" if rain_amount is not None else "정보 없음"
                 }
                 df = pd.DataFrame([info])
                 st.write("주요 정보:")
@@ -97,13 +97,27 @@ elif menu == "주간날씨":
                     day_dict = defaultdict(list)
                     for item in forecast_data['list']:
                         date_str = item['dt_txt'].split(' ')[0]
+                        desc = item['weather'][0]['description']
+                        # 날씨 이모지
+                        if '비' in desc or 'rain' in desc:
+                            weather_emoji = '🌧️'
+                        elif '구름' in desc or 'cloud' in desc:
+                            weather_emoji = '☁️'
+                        elif '맑음' in desc or 'clear' in desc:
+                            weather_emoji = '☀️'
+                        elif '눈' in desc or 'snow' in desc:
+                            weather_emoji = '❄️'
+                        elif '흐림' in desc or 'overcast' in desc:
+                            weather_emoji = '🌫️'
+                        else:
+                            weather_emoji = ''
                         day_dict[date_str].append({
                             '시간': item['dt_txt'].split(' ')[1],
-                            '온도(°C)': item['main']['temp'],
-                            '체감온도(°C)': item['main']['feels_like'],
-                            '습도(%)': item['main']['humidity'],
-                            '날씨': item['weather'][0]['description'],
-                            '강수량(mm)': item.get('rain', {}).get('3h', 0)
+                            '온도(°C) 🌡️': f"{item['main']['temp']} 🌡️",
+                            '체감온도(°C)': f"{item['main']['feels_like']} 🌡️",
+                            '습도(%) 💧': f"{item['main']['humidity']} 💧",
+                            '날씨': f"{desc} {weather_emoji}",
+                            '강수량(mm) 🌧️': f"{item.get('rain', {}).get('3h', 0)} 🌧️"
                         })
                     for date, rows in list(day_dict.items())[:5]:
                         st.markdown(f"### {date}")
