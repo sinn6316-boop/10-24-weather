@@ -54,40 +54,25 @@ elif menu == "오늘날씨":
             if data:
                 weather_desc = data['weather'][0]['description']
                 temp = data['main'].get('temp') if 'main' in data else None
+                feels_like = data['main'].get('feels_like') if 'main' in data else None
+                humidity = data['main'].get('humidity') if 'main' in data else None
                 bg_img = get_background_image(weather_desc, temp)
                 emoji = get_weather_emoji(weather_desc)
-                rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
-                rain_emoji = '🌧️' if rain_amount > 0 else ''
-                weather_line = f"날씨: {weather_desc} {emoji}"
-                if rain_amount > 0:
-                    weather_line += f" / 강수량: {rain_amount}mm {rain_emoji}"
+                rain_amount = data.get('rain', {}).get('1h', 0)
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
                 if bg_img:
                     st.image(bg_img, width=120)
-                st.write(weather_line)
-                st.write(f"풍속: {data['wind']['speed']} m/s")
-                # 주요 정보 표
-                if 'main' in data:
-                    main = data['main']
-                    key_map = {
-                        'temp': '온도(°C)',
-                        'feels_like': '체감온도(°C)',
-                        'temp_min': '최저온도(°C)',
-                        'temp_max': '최고온도(°C)',
-                        'humidity': '습도(%)'
-                    }
-                    if 'rain' in data and '1h' in data['rain']:
-                        main['rain_1h'] = data['rain']['1h']
-                        key_map['rain_1h'] = '강수량(1시간, mm)'
-                    if 'snow' in data and '1h' in data['snow']:
-                        main['snow_1h'] = data['snow']['1h']
-                        key_map['snow_1h'] = '적설량(1시간, mm)'
-                    main_kor = {key_map.get(k, k): v for k, v in main.items()}
-                    df = pd.DataFrame([main_kor])
-                    st.write("주요 정보:")
-                    df['날씨'] = f"{weather_desc} {emoji}"
-                    st.dataframe(df)
+                info = {
+                    '온도(°C)': temp,
+                    '체감온도(°C)': feels_like,
+                    '습도(%)': humidity,
+                    '날씨': f"{weather_desc} {emoji}",
+                    '강수량(1시간, mm)': rain_amount
+                }
+                df = pd.DataFrame([info])
+                st.write("주요 정보:")
+                st.dataframe(df)
                 st.markdown("</div>", unsafe_allow_html=True)
             if menu == "오늘날씨":
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
