@@ -90,19 +90,23 @@ elif menu == "주간날씨":
                 forecast_data = fetch_forecast(lat, lon, API_KEY)
                 if forecast_data and 'list' in forecast_data:
                     st.subheader(f"{selected_subregion}의 주간 날씨 예보")
-                    # 예보 데이터에서 주요 정보만 추출하여 표로 표시
-                    forecast_list = []
+                    # 날짜별로 시간대별 표를 분리하여 출력
+                    from collections import defaultdict
+                    day_dict = defaultdict(list)
                     for item in forecast_data['list']:
-                        forecast_list.append({
-                            '날짜': item['dt_txt'],
+                        date_str = item['dt_txt'].split(' ')[0]
+                        day_dict[date_str].append({
+                            '시간': item['dt_txt'].split(' ')[1],
                             '온도(°C)': item['main']['temp'],
                             '체감온도(°C)': item['main']['feels_like'],
                             '습도(%)': item['main']['humidity'],
                             '날씨': item['weather'][0]['description'],
                             '강수량(mm)': item.get('rain', {}).get('3h', 0)
                         })
-                    df = pd.DataFrame(forecast_list)
-                    st.dataframe(df)
+                    for date, rows in list(day_dict.items())[:5]:
+                        st.markdown(f"### {date}")
+                        df = pd.DataFrame(rows)
+                        st.dataframe(df)
                 else:
                     st.write("주간 날씨 정보를 가져올 수 없습니다.")
             else:
