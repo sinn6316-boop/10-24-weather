@@ -42,10 +42,10 @@ if menu == "오늘의 옷차림":
     table_html += '</table>'
     st.markdown(table_html, unsafe_allow_html=True)
 elif menu == "오늘날씨":
+    region_list = list(region_map.keys())
+    selected_region = st.selectbox("지역 선택", region_list)
+    subregion_list = list(region_map[selected_region].keys())
     with st.form(key="weather_form_today"):
-        region_list = list(region_map.keys())
-        selected_region = st.selectbox("지역 선택", region_list)
-        subregion_list = list(region_map[selected_region].keys())
         selected_subregion = st.selectbox("도시/구 선택", subregion_list)
         submitted_today = st.form_submit_button("완료")
     if submitted_today:
@@ -72,10 +72,10 @@ elif menu == "오늘날씨":
                 st.dataframe(df)
                 st.markdown("</div>", unsafe_allow_html=True)
 elif menu == "주간날씨":
+    region_list = list(region_map.keys())
+    selected_region = st.selectbox("지역 선택", region_list)
+    subregion_list = list(region_map[selected_region].keys())
     with st.form(key="weather_form_week"):
-        region_list = list(region_map.keys())
-        selected_region = st.selectbox("지역 선택", region_list)
-        subregion_list = list(region_map[selected_region].keys())
         selected_subregion = st.selectbox("도시/구 선택", subregion_list)
         submitted_week = st.form_submit_button("완료")
     if submitted_week:
