@@ -50,8 +50,9 @@ elif menu == "오늘날씨":
         submitted_today = st.form_submit_button("완료")
     if submitted_today:
         city_en = region_map[selected_region][selected_subregion]
+        city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
         if API_KEY:
-            data = fetch_weather(city_en, API_KEY)
+            data = fetch_weather(city_query, API_KEY)
             if data:
                 weather_desc = data['weather'][0]['description']
                 temp = data['main'].get('temp') if 'main' in data else None
@@ -80,10 +81,11 @@ elif menu == "주간날씨":
         submitted_week = st.form_submit_button("완료")
     if submitted_week:
         city_en = region_map[selected_region][selected_subregion]
+        city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
         if not API_KEY:
             st.write("API 키가 없습니다. 환경 변수 또는 secrets에 API 키를 설정하세요.")
         else:
-            weather_data = fetch_weather(city_en, API_KEY)
+            weather_data = fetch_weather(city_query, API_KEY)
             if weather_data and 'coord' in weather_data:
                 lat = weather_data['coord']['lat']
                 lon = weather_data['coord']['lon']
