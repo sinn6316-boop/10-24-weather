@@ -16,7 +16,8 @@ st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-
 
 menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
 
-API_KEY = os.getenv("OPENWEATHER_API_KEY")
+# 사용자 API 키 직접 할당
+API_KEY = "41d0805b0340385a400c764781eb7d0f"
 
 if menu == "오늘의 옷차림":
     st.subheader("온도별 옷차림 추천표")
@@ -112,11 +113,30 @@ elif menu == "주간날씨":
         submitted_week = st.form_submit_button("완료")
     if submitted_week:
         city_en = region_map[selected_region][selected_subregion]
-        if API_KEY:
-            forecast = fetch_forecast(city_en, API_KEY)
-            if forecast:
-                st.subheader(f"{selected_subregion}의 주간 날씨 예보")
-                df = pd.DataFrame(forecast)
-                st.dataframe(df)
+        if not API_KEY:
+            st.write("API 키가 없습니다. 환경 변수 또는 secrets에 API 키를 설정하세요.")
+        else:
+            weather_data = fetch_weather(city_en, API_KEY)
+            if weather_data and 'coord' in weather_data:
+                lat = weather_data['coord']['lat']
+                lon = weather_data['coord']['lon']
+                forecast_data = fetch_forecast(lat, lon, API_KEY)
+                if forecast_data and 'list' in forecast_data:
+                    st.subheader(f"{selected_subregion}의 주간 날씨 예보")
+                    # 예보 데이터에서 주요 정보만 추출하여 표로 표시
+                    forecast_list = []
+                    for item in forecast_data['list']:
+                        forecast_list.append({
+                            '날짜': item['dt_txt'],
+                            '온도(°C)': item['main']['temp'],
+                            '체감온도(°C)': item['main']['feels_like'],
+                            '습도(%)': item['main']['humidity'],
+                            '날씨': item['weather'][0]['description'],
+                            '강수량(mm)': item.get('rain', {}).get('3h', 0)
+                        })
+                    df = pd.DataFrame(forecast_list)
+                    st.dataframe(df)
+                else:
+                    st.write("주간 날씨 정보를 가져올 수 없습니다.")
             else:
-                st.write("주간 날씨 정보를 가져올 수 없습니다.")
+                st.write("해당 지역의 좌표 정보를 가져올 수 없습니다.")
