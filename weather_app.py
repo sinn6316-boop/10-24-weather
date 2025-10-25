@@ -62,15 +62,34 @@ elif menu == "오늘날씨":
                 rain_amount = data.get('rain', {}).get('1h', 0)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
                 info = {
-                    '온도(°C) 🌡️': f"{temp} 🌡️" if temp is not None else "정보 없음",
+                    '온도(°C)': f"{temp} 🌡️" if temp is not None else "정보 없음",
                     '체감온도(°C)': f"{feels_like} 🌡️" if feels_like is not None else "정보 없음",
-                    '습도(%) 💧': f"{humidity} 💧" if humidity is not None else "정보 없음",
+                    '습도(%)': f"{humidity} 💧" if humidity is not None else "정보 없음",
                     '날씨': f"{weather_desc} {emoji}" if weather_desc else "정보 없음",
-                    '강수량(1시간, mm) 🌧️': f"{rain_amount} 🌧️" if rain_amount is not None else "정보 없음"
+                    '강수량(1시간, mm)': f"{rain_amount} 🌧️" if rain_amount is not None else "정보 없음"
                 }
                 df = pd.DataFrame([info])
-                st.write("주요 정보:")
-                st.dataframe(df)
+                                import datetime
+                                today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+                                st.markdown(f"<h2 style='text-align:center;'>{today_str} {selected_subregion} 날씨</h2>", unsafe_allow_html=True)
+                                st.markdown("""
+<div style='display:flex; justify-content:space-around; align-items:center; margin:32px 0;'>
+    <div style='font-size:48px; text-align:center;'>
+        {emoji}<br><span style='font-size:32px;'>{weather_desc}</span>
+    </div>
+    <div style='font-size:40px; text-align:center;'>🌡️<br><span style='font-size:32px;'>{temp if temp is not None else '정보 없음'}°C</span></div>
+    <div style='font-size:40px; text-align:center;'>🌡️<br><span style='font-size:32px;'>{feels_like if feels_like is not None else '정보 없음'}°C</span><br><span style='font-size:18px;'>체감온도</span></div>
+    <div style='font-size:40px; text-align:center;'>💧<br><span style='font-size:32px;'>{humidity if humidity is not None else '정보 없음'}%</span></div>
+    <div style='font-size:40px; text-align:center;'>🌧️<br><span style='font-size:32px;'>{rain_amount if rain_amount is not None else '정보 없음'}mm</span></div>
+</div>
+""".format(
+        emoji=emoji,
+        weather_desc=weather_desc,
+        temp=temp if temp is not None else '정보 없음',
+        feels_like=feels_like if feels_like is not None else '정보 없음',
+        humidity=humidity if humidity is not None else '정보 없음',
+        rain_amount=rain_amount if rain_amount is not None else '정보 없음'
+), unsafe_allow_html=True)
                 st.markdown("</div>", unsafe_allow_html=True)
 elif menu == "주간날씨":
     region_list = list(region_map.keys())
@@ -113,11 +132,11 @@ elif menu == "주간날씨":
                             weather_emoji = ''
                         day_dict[date_str].append({
                             '시간': item['dt_txt'].split(' ')[1],
-                            '온도(°C) 🌡️': f"{item['main']['temp']} 🌡️",
+                            '온도(°C)': f"{item['main']['temp']} 🌡️",
                             '체감온도(°C)': f"{item['main']['feels_like']} 🌡️",
-                            '습도(%) 💧': f"{item['main']['humidity']} 💧",
+                            '습도(%)': f"{item['main']['humidity']} 💧",
                             '날씨': f"{desc} {weather_emoji}",
-                            '강수량(mm) 🌧️': f"{item.get('rain', {}).get('3h', 0)} 🌧️"
+                            '강수량(mm)': f"{item.get('rain', {}).get('3h', 0)} 🌧️"
                         })
                     for date, rows in list(day_dict.items())[:5]:
                         st.markdown(f"### {date}")
