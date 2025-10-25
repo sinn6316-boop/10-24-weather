@@ -62,8 +62,11 @@ elif menu == "오늘날씨":
                 rain_amount = data.get('rain', {}).get('1h', 0)
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
-                if bg_img:
+                import os
+                if bg_img and os.path.exists(bg_img):
                     st.image(bg_img, width=120)
+                elif bg_img:
+                    st.write(f"이미지 파일을 찾을 수 없습니다: {bg_img}")
                 info = {
                     '온도(°C)': temp,
                     '체감온도(°C)': feels_like,
