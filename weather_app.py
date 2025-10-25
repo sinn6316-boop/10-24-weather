@@ -41,13 +41,13 @@ if menu == "오늘의 옷차림":
     table_html += '</table>'
     st.markdown(table_html, unsafe_allow_html=True)
 elif menu == "오늘날씨":
-    with st.form(key="weather_form"):
+    with st.form(key="weather_form_today"):
         region_list = list(region_map.keys())
-        selected_region = st.selectbox("지역 선택", region_list, key="main_region")
+        selected_region = st.selectbox("지역 선택", region_list, key="main_region_today")
         subregion_list = list(region_map[selected_region].keys())
-        selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="main_subregion")
-        submitted = st.form_submit_button("완료")
-    if submitted:
+        selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="main_subregion_today")
+        submitted_today = st.form_submit_button("완료")
+    if submitted_today:
         city_en = region_map[selected_region][selected_subregion]
         if API_KEY:
             data = fetch_weather(city_en, API_KEY)
@@ -61,6 +61,34 @@ elif menu == "오늘날씨":
                 weather_line = f"날씨: {weather_desc} {emoji}"
                 if rain_amount > 0:
                     weather_line += f" / 강수량: {rain_amount}mm {rain_emoji}"
+                st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
+                st.subheader(f"{selected_subregion}의 현재 날씨")
+                if bg_img:
+                    st.image(bg_img, width=120)
+                st.write(weather_line)
+                st.write(f"풍속: {data['wind']['speed']} m/s")
+                # 주요 정보 표
+                if 'main' in data:
+                    main = data['main']
+                    key_map = {
+                        'temp': '온도(°C)',
+                        'feels_like': '체감온도(°C)',
+                        'temp_min': '최저온도(°C)',
+                        'temp_max': '최고온도(°C)',
+                        'humidity': '습도(%)'
+                    }
+                    if 'rain' in data and '1h' in data['rain']:
+                        main['rain_1h'] = data['rain']['1h']
+                        key_map['rain_1h'] = '강수량(1시간, mm)'
+                    if 'snow' in data and '1h' in data['snow']:
+                        main['snow_1h'] = data['snow']['1h']
+                        key_map['snow_1h'] = '적설량(1시간, mm)'
+                    main_kor = {key_map.get(k, k): v for k, v in main.items()}
+                    df = pd.DataFrame([main_kor])
+                    st.write("주요 정보:")
+                    df['날씨'] = f"{weather_desc} {emoji}"
+                    st.dataframe(df)
+                st.markdown("</div>", unsafe_allow_html=True)
             if menu == "오늘날씨":
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
@@ -90,6 +118,20 @@ elif menu == "오늘날씨":
                     df['날씨'] = f"{weather_desc} {emoji}"
                     st.dataframe(df)
                 st.markdown("</div>", unsafe_allow_html=True)
-            elif menu == "주간날씨":
-                # ...주간날씨 코드 (fetch_forecast 등) 여기서 구현...
-                st.write("주간날씨 기능은 아직 구현되지 않았습니다.")
+elif menu == "주간날씨":
+    with st.form(key="weather_form_week"):
+        region_list = list(region_map.keys())
+        selected_region = st.selectbox("지역 선택", region_list, key="main_region_week")
+        subregion_list = list(region_map[selected_region].keys())
+        selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="main_subregion_week")
+        submitted_week = st.form_submit_button("완료")
+    if submitted_week:
+        city_en = region_map[selected_region][selected_subregion]
+        if API_KEY:
+            forecast = fetch_forecast(city_en, API_KEY)
+            if forecast:
+                st.subheader(f"{selected_subregion}의 주간 날씨 예보")
+                df = pd.DataFrame(forecast)
+                st.dataframe(df)
+            else:
+                st.write("주간 날씨 정보를 가져올 수 없습니다.")
