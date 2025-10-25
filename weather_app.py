@@ -64,7 +64,7 @@ elif menu == "오늘날씨":
                                     today_str = datetime.datetime.now().strftime('%Y-%m-%d')
                                     st.markdown(
                                                         """
-                        <div style='max-width:1200px; margin:0 auto; background:#eaf6ff; border-radius:32px; box-shadow:0 4px 24px rgba(0,0,0,0.08); padding:48px 32px;'>
+                        <div style='width:100%; min-width:400px; max-width:1600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 8px 32px rgba(0,0,0,0.10); padding:64px 48px;'>
                             <div style='width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:#1a4a7a; border-radius:24px 24px 0 0; margin-bottom:0;'>
                                 <span style='font-size:38px; font-weight:700; color:#fff;'>{today_str} {selected_subregion} 날씨</span>
                             </div>
