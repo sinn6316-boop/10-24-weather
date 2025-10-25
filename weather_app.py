@@ -57,27 +57,19 @@ elif menu == "오늘날씨":
                 temp = data['main'].get('temp') if 'main' in data else None
                 feels_like = data['main'].get('feels_like') if 'main' in data else None
                 humidity = data['main'].get('humidity') if 'main' in data else None
-                bg_img = get_background_image(weather_desc, temp)
                 emoji = get_weather_emoji(weather_desc)
                 rain_amount = data.get('rain', {}).get('1h', 0)
-                st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
-                import os
-                if bg_img and os.path.exists(bg_img):
-                    st.image(bg_img, width=120)
-                elif bg_img:
-                    st.write(f"이미지 파일을 찾을 수 없습니다: {bg_img}")
                 info = {
-                    '온도(°C)': temp,
-                    '체감온도(°C)': feels_like,
-                    '습도(%)': humidity,
-                    '날씨': f"{weather_desc} {emoji}",
-                    '강수량(1시간, mm)': rain_amount
+                    '온도(°C)': temp if temp is not None else "정보 없음",
+                    '체감온도(°C)': feels_like if feels_like is not None else "정보 없음",
+                    '습도(%)': humidity if humidity is not None else "정보 없음",
+                    '날씨': f"{weather_desc} {emoji}" if weather_desc else "정보 없음",
+                    '강수량(1시간, mm)': rain_amount if rain_amount is not None else "정보 없음"
                 }
                 df = pd.DataFrame([info])
                 st.write("주요 정보:")
                 st.dataframe(df)
-                st.markdown("</div>", unsafe_allow_html=True)
             if menu == "오늘날씨":
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
