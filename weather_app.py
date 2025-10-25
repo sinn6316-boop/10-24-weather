@@ -89,11 +89,11 @@ elif menu == "오늘날씨":
                                     <div style='font-size:26px; margin-top:12px;'>습도</div>
                                     <div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
                                 </div>
-                                <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                                    <div style='font-size:80px;'>🌧️</div>
-                                    <div style='font-size:26px; margin-top:12px;'>강수량</div>
-                                    <div style='font-size:34px; margin-top:12px;'>{rain_amount}mm</div>
-                                </div>
+                                    <div style='flex:1; max-width:320px; background:#e0f7fa; border-radius:24px; padding:48px 32px; text-align:center;'>
+                                        <div style='font-size:100px;'>🌧️</div>
+                                        <div style='font-size:30px; margin-top:18px;'>강수량</div>
+                                        <div style='font-size:40px; margin-top:18px;'>{rain_amount}mm</div>
+                                    </div>
                             </div>
                         </div>
                         """.format(
