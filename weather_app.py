@@ -40,24 +40,27 @@ if menu == "오늘의 옷차림":
         table_html += f'<td style="color:{row["color"]};">{row["추천"]}</td></tr>'
     table_html += '</table>'
     st.markdown(table_html, unsafe_allow_html=True)
-else:
-    region_list = list(region_map.keys())
-    selected_region = st.selectbox("지역 선택", region_list, key="main_region")
-    subregion_list = list(region_map[selected_region].keys())
-    selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="main_subregion")
-    city_en = region_map[selected_region][selected_subregion]
-    if API_KEY:
-        data = fetch_weather(city_en, API_KEY)
-        if data:
-            weather_desc = data['weather'][0]['description']
-            temp = data['main'].get('temp') if 'main' in data else None
-            bg_img = get_background_image(weather_desc, temp)
-            emoji = get_weather_emoji(weather_desc)
-            rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
-            rain_emoji = '🌧️' if rain_amount > 0 else ''
-            weather_line = f"날씨: {weather_desc} {emoji}"
-            if rain_amount > 0:
-                weather_line += f" / 강수량: {rain_amount}mm {rain_emoji}"
+elif menu == "오늘날씨":
+    with st.form(key="weather_form"):
+        region_list = list(region_map.keys())
+        selected_region = st.selectbox("지역 선택", region_list, key="main_region")
+        subregion_list = list(region_map[selected_region].keys())
+        selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="main_subregion")
+        submitted = st.form_submit_button("완료")
+    if submitted:
+        city_en = region_map[selected_region][selected_subregion]
+        if API_KEY:
+            data = fetch_weather(city_en, API_KEY)
+            if data:
+                weather_desc = data['weather'][0]['description']
+                temp = data['main'].get('temp') if 'main' in data else None
+                bg_img = get_background_image(weather_desc, temp)
+                emoji = get_weather_emoji(weather_desc)
+                rain_amount = data.get('rain', {}).get('1h', data.get('rain', {}).get('3h', 0))
+                rain_emoji = '🌧️' if rain_amount > 0 else ''
+                weather_line = f"날씨: {weather_desc} {emoji}"
+                if rain_amount > 0:
+                    weather_line += f" / 강수량: {rain_amount}mm {rain_emoji}"
             if menu == "오늘날씨":
                 st.markdown(f"<div class='weather-box'>", unsafe_allow_html=True)
                 st.subheader(f"{selected_subregion}의 현재 날씨")
@@ -89,3 +92,4 @@ else:
                 st.markdown("</div>", unsafe_allow_html=True)
             elif menu == "주간날씨":
                 # ...주간날씨 코드 (fetch_forecast 등) 여기서 구현...
+                st.write("주간날씨 기능은 아직 구현되지 않았습니다.")
