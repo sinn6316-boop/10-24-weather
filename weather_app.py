@@ -50,20 +50,20 @@ elif menu == "오늘날씨":
         selected_subregion = st.selectbox("도시/구 선택", subregion_list)
         submitted_today = st.form_submit_button("완료")
     if submitted_today:
-                city_en = region_map[selected_region][selected_subregion]
-                city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
-                if API_KEY:
-                        data = fetch_weather(city_query, API_KEY)
-                        if data:
-                                weather_desc = data['weather'][0]['description']
-                                temp = data['main'].get('temp') if 'main' in data else None
-                                feels_like = data['main'].get('feels_like') if 'main' in data else None
-                                humidity = data['main'].get('humidity') if 'main' in data else None
-                                emoji = get_weather_emoji(weather_desc)
-                                rain_amount = data.get('rain', {}).get('1h', 0)
-                                today_str = datetime.datetime.now().strftime('%Y-%m-%d')
-                                st.markdown(f"<h2 style='text-align:center;'>{today_str} {selected_subregion} 날씨</h2>", unsafe_allow_html=True)
-                                st.markdown("""
+        city_en = region_map[selected_region][selected_subregion]
+        city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
+        if API_KEY:
+                data = fetch_weather(city_query, API_KEY)
+                if data:
+                        weather_desc = data['weather'][0]['description']
+                        temp = data['main'].get('temp') if 'main' in data else None
+                        feels_like = data['main'].get('feels_like') if 'main' in data else None
+                        humidity = data['main'].get('humidity') if 'main' in data else None
+                        emoji = get_weather_emoji(weather_desc)
+                        rain_amount = data.get('rain', {}).get('1h', 0)
+                        today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+                        st.markdown(f"<h2 style='text-align:center;'>{today_str} {selected_subregion} 날씨</h2>", unsafe_allow_html=True)
+                        st.markdown("""
 <div style='display:flex; justify-content:space-around; align-items:center; margin:32px 0;'>
     <div style='font-size:48px; text-align:center;'>
         {emoji}<br><span style='font-size:32px;'>{weather_desc}</span>
