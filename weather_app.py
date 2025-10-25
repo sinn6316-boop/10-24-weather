@@ -70,14 +70,6 @@ elif menu == "오늘날씨":
                 df = pd.DataFrame([info])
                 st.write("주요 정보:")
                 st.dataframe(df)
-                    if 'snow' in data and '1h' in data['snow']:
-                        main['snow_1h'] = data['snow']['1h']
-                        key_map['snow_1h'] = '적설량(1시간, mm)'
-                    main_kor = {key_map.get(k, k): v for k, v in main.items()}
-                    df = pd.DataFrame([main_kor])
-                    st.write("주요 정보:")
-                    df['날씨'] = f"{weather_desc} {emoji}"
-                    st.dataframe(df)
                 st.markdown("</div>", unsafe_allow_html=True)
 elif menu == "주간날씨":
     with st.form(key="weather_form_week"):
