@@ -46,67 +46,66 @@ elif menu == "오늘날씨":
             region_list = list(region_map.keys())
             selected_region = st.selectbox("지역 선택", region_list)
             subregion_list = list(region_map[selected_region].keys())
-            with st.form(key="weather_form_today"):
-                    selected_subregion = st.selectbox("도시/구 선택", subregion_list)
-                    submitted_today = st.form_submit_button("완료")
+            selected_subregion = st.selectbox("도시/구 선택", subregion_list)
+            submitted_today = st.button("완료")
                     # ...existing code...
-                    if submitted_today:
-                            city_en = region_map[selected_region][selected_subregion]
-                            city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
-                            if API_KEY:
-                                    data = fetch_weather(city_query, API_KEY)
-                                    if data:
-                                            weather_desc = data['weather'][0]['description']
-                                            temp = data['main'].get('temp') if 'main' in data else None
-                                            feels_like = data['main'].get('feels_like') if 'main' in data else None
-                                            humidity = data['main'].get('humidity') if 'main' in data else None
-                                            emoji = get_weather_emoji(weather_desc)
-                                            rain_amount = data.get('rain', {}).get('1h', 0)
-                                            today_str = datetime.datetime.now().strftime('%Y-%m-%d')
-                                            st.markdown(
-                                                    """
-    <div style='max-width:1200px; margin:0 auto; background:#eaf6ff; border-radius:32px; box-shadow:0 4px 24px rgba(0,0,0,0.08); padding:48px 32px 32px 32px;'>
-        <div style='font-size:38px; font-weight:700; text-align:center; margin-bottom:32px; color:#1a4a7a;'>
-            {today_str} {selected_subregion} 날씨
-        </div>
-        <div style='display:flex; justify-content:space-evenly; align-items:stretch; gap:40px;'>
-            <div style='flex:1; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                <div style='font-size:80px;'>{emoji}</div>
-                <div style='font-size:26px; margin-top:12px;'>날씨</div>
-                <div style='font-size:34px; margin-top:12px;'>{weather_desc}</div>
+            if submitted_today:
+                    city_en = region_map[selected_region][selected_subregion]
+                    city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
+                    if API_KEY:
+                            data = fetch_weather(city_query, API_KEY)
+                            if data:
+                                    weather_desc = data['weather'][0]['description']
+                                    temp = data['main'].get('temp') if 'main' in data else None
+                                    feels_like = data['main'].get('feels_like') if 'main' in data else None
+                                    humidity = data['main'].get('humidity') if 'main' in data else None
+                                    emoji = get_weather_emoji(weather_desc)
+                                    rain_amount = data.get('rain', {}).get('1h', 0)
+                                    today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+                                    st.markdown(
+                                            """
+            <div style='max-width:1200px; margin:0 auto; background:#eaf6ff; border-radius:32px; box-shadow:0 4px 24px rgba(0,0,0,0.08); padding:48px 32px 32px 32px;'>
+                <div style='font-size:38px; font-weight:700; text-align:center; margin-bottom:32px; color:#1a4a7a;'>
+                    {today_str} {selected_subregion} 날씨
+                </div>
+                <div style='display:flex; justify-content:center; align-items:stretch; gap:40px;'>
+                    <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+                        <div style='font-size:80px;'>{emoji}</div>
+                        <div style='font-size:26px; margin-top:12px;'>날씨</div>
+                        <div style='font-size:34px; margin-top:12px;'>{weather_desc}</div>
+                    </div>
+                    <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+                        <div style='font-size:80px;'>🌡️</div>
+                        <div style='font-size:26px; margin-top:12px;'>온도</div>
+                        <div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
+                    </div>
+                    <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+                        <div style='font-size:80px;'>🌡️</div>
+                        <div style='font-size:26px; margin-top:12px;'>체감온도</div>
+                        <div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
+                    </div>
+                    <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+                        <div style='font-size:80px;'>💧</div>
+                        <div style='font-size:26px; margin-top:12px;'>습도</div>
+                        <div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
+                    </div>
+                    <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+                        <div style='font-size:80px;'>🌧️</div>
+                        <div style='font-size:26px; margin-top:12px;'>강수량</div>
+                        <div style='font-size:34px; margin-top:12px;'>{rain_amount}mm</div>
+                    </div>
+                </div>
             </div>
-            <div style='flex:1; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                <div style='font-size:80px;'>🌡️</div>
-                <div style='font-size:26px; margin-top:12px;'>온도</div>
-                <div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
-            </div>
-            <div style='flex:1; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                <div style='font-size:80px;'>🌡️</div>
-                <div style='font-size:26px; margin-top:12px;'>체감온도</div>
-                <div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
-            </div>
-            <div style='flex:1; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                <div style='font-size:80px;'>💧</div>
-                <div style='font-size:26px; margin-top:12px;'>습도</div>
-                <div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
-            </div>
-            <div style='flex:1; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-                <div style='font-size:80px;'>🌧️</div>
-                <div style='font-size:26px; margin-top:12px;'>강수량</div>
-                <div style='font-size:34px; margin-top:12px;'>{rain_amount}mm</div>
-            </div>
-        </div>
-    </div>
-    """.format(
-                                                    today_str=today_str,
-                                                    selected_subregion=selected_subregion,
-                                                    emoji=emoji,
-                                                    weather_desc=weather_desc,
-                                                    temp=temp if temp is not None else '정보 없음',
-                                                    feels_like=feels_like if feels_like is not None else '정보 없음',
-                                                    humidity=humidity if humidity is not None else '정보 없음',
-                                                    rain_amount=rain_amount if rain_amount is not None else '정보 없음'
-                                            ), unsafe_allow_html=True)
+            """.format(
+                                            today_str=today_str,
+                                            selected_subregion=selected_subregion,
+                                            emoji=emoji,
+                                            weather_desc=weather_desc,
+                                            temp=temp if temp is not None else '정보 없음',
+                                            feels_like=feels_like if feels_like is not None else '정보 없음',
+                                            humidity=humidity if humidity is not None else '정보 없음',
+                                            rain_amount=rain_amount if rain_amount is not None else '정보 없음'
+                                    ), unsafe_allow_html=True)
 elif menu == "주간날씨":
     region_list = list(region_map.keys())
     selected_region = st.selectbox("지역 선택", region_list)
