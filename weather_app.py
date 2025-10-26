@@ -87,8 +87,11 @@ elif menu == "오늘날씨":
                 city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
                 if API_KEY:
                     data = fetch_weather(city_query, API_KEY)
-                    # 보정: 결과가 없으면 도시명만으로 재검색
-                    if not data:
+                    # 대구 구별: 정보가 없으면 대구 전체로 재검색
+                    if selected_region == "대구" and not data:
+                        data = fetch_weather("Daegu", API_KEY)
+                        city_query = "Daegu"
+                    elif not data:
                         data = fetch_weather(city_en, API_KEY)
                         city_query = city_en
                     if data:
