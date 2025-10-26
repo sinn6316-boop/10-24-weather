@@ -64,10 +64,10 @@ API_KEY = "41d0805b0340385a400c764781eb7d0f"
 
 with tabs[0]:
 	region_list = list(region_map.keys())
-	selected_region = st.selectbox("지역 선택", region_list)
+	selected_region = st.selectbox("지역 선택", region_list, key="region_today")
 	subregion_list = list(region_map[selected_region].keys())
-	selected_subregion = st.selectbox("도시/구 선택", subregion_list)
-	submitted_today = st.button("완료")
+	selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="subregion_today")
+	submitted_today = st.button("완료", key="btn_today")
 	if submitted_today:
 		city_en = region_map[selected_region][selected_subregion]
 		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
@@ -127,11 +127,11 @@ with tabs[0]:
 
 with tabs[1]:
 	region_list = list(region_map.keys())
-	selected_region = st.selectbox("지역 선택", region_list)
+	selected_region = st.selectbox("지역 선택", region_list, key="region_week")
 	subregion_list = list(region_map[selected_region].keys())
 	with st.form(key="weather_form_week"):
-		selected_subregion = st.selectbox("도시/구 선택", subregion_list)
-		submitted_week = st.form_submit_button("완료")
+		selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="subregion_week")
+		submitted_week = st.form_submit_button("완료", key="btn_week")
 	if submitted_week:
 		city_en = region_map[selected_region][selected_subregion]
 		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
