@@ -14,7 +14,61 @@ from ui_helpers import get_background_image, get_weather_emoji
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
 
-menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
+
+# 전문적인 상단 탭 메뉴와 전체 레이아웃 CSS 적용
+st.markdown('''
+<style>
+body, .main, .block-container {
+    background: #eaf6ff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.block-container {
+    max-width: 1600px;
+    padding-top: 0 !important;
+}
+.stTabs [role="tablist"] {
+    justify-content: center;
+    background: #1976d2;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    margin-bottom: 0;
+}
+.stTabs [role="tab"] {
+    color: #fff !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    padding: 18px 48px !important;
+    margin: 0 2px;
+    background: transparent !important;
+    border: none !important;
+}
+.stTabs [aria-selected="true"] {
+    background: #1565c0 !important;
+    padding: 18px 12px;
+    border-bottom: 2px solid #1565c0;
+}
+.modern-table td {
+    text-align: center;
+    padding: 16px 10px;
+    border-bottom: 1px solid #e3e3e3;
+    transition: background 0.2s;
+}
+.modern-table tr:hover td {
+    background: #e3f2fd;
+}
+.modern-table tr:last-child td {
+    border-bottom: none;
+}
+</style>
+''', unsafe_allow_html=True)
+    table_html = '<table class="modern-table">'
+    table_html += '<tr><th>온도 구간</th><th>추천 옷차림</th></tr>'
+    for row in temp_clothes:
+        table_html += f'<tr><td style="color:{row["color"]}; font-weight:bold;">{row["구간"]}</td>'
+        table_html += f'<td style="color:{row["color"]};">{row["추천"]}</td></tr>'
+    table_html += '</table>'
+    st.markdown(table_html, unsafe_allow_html=True)
 
 # 사용자 API 키 직접 할당
 API_KEY = "41d0805b0340385a400c764781eb7d0f"
