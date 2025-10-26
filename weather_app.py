@@ -58,6 +58,8 @@ elif menu == "오늘날씨":
                     if not data:
                         data = fetch_weather(city_en, API_KEY)
                         city_query = city_en
+                        # 안내문: 구별 정보가 없으면 도시 전체 날씨로 안내
+                        st.info(f"{selected_region}의 구별 상세 날씨는 제공되지 않아, {selected_region} 전체 날씨로 표시됩니다.")
                     if data:
                         weather_desc = data['weather'][0]['description']
                         temp = data['main'].get('temp') if 'main' in data else None
