@@ -14,7 +14,83 @@ from ui_helpers import get_background_image, get_weather_emoji
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
 
-menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
+st.sidebar.markdown('''
+<style>
+.pro-menu-card {
+    background: #f5f8fd;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 32px 18px 24px 18px;
+    margin-bottom: 24px;
+}
+.pro-menu-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1976d2;
+    margin-bottom: 18px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+.pro-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.pro-menu-btn {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    padding: 14px 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1976d2;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, color 0.2s;
+}
+.pro-menu-btn.selected {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 800;
+}
+.pro-menu-btn:hover {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+.pro-menu-icon {
+    font-size: 26px;
+    margin-right: 12px;
+}
+.pro-menu-divider {
+    height: 1px;
+    background: #e3e3e3;
+    margin: 8px 0;
+    border: none;
+}
+</style>
+<div class="pro-menu-card">
+    <div class="pro-menu-title">메뉴</div>
+    <div class="pro-menu-list">
+        <!-- 메뉴 버튼은 Streamlit에서 생성 -->
+    </div>
+</div>
+''', unsafe_allow_html=True)
+
+# 전문적인 메뉴 버튼 (아이콘+텍스트, 선택 강조)
+menu_options = ["오늘날씨", "주간날씨", "오늘의 옷차림"]
+menu_icons = ["🌤️", "📅", "👕"]
+if "menu" not in st.session_state:
+        st.session_state.menu = menu_options[0]
+for i, option in enumerate(menu_options):
+        btn_class = "pro-menu-btn selected" if st.session_state.menu == option else "pro-menu-btn"
+        if st.sidebar.button(f"{menu_icons[i]} {option}", key=f"pro_menu_btn_{i}"):
+                st.session_state.menu = option
+        st.sidebar.markdown(f'<div class="{btn_class}">{menu_icons[i]} {option}</div>', unsafe_allow_html=True)
+        if i < len(menu_options)-1:
+                st.sidebar.markdown('<hr class="pro-menu-divider">', unsafe_allow_html=True)
+menu = st.session_state.menu
 
 # 사용자 API 키 직접 할당
 API_KEY = "41d0805b0340385a400c764781eb7d0f"
