@@ -34,8 +34,41 @@ if menu == "오늘의 옷차림":
         {"구간": "23°C ~ 27°C", "추천": "반팔, 얇은 셔츠, 얇은 바지, 면바지", "color": "#FF8F00"},
         {"구간": "28°C 이상", "추천": "민소매, 반팔, 반바지, 원피스", "color": "#FF6F00"}
     ]
-    st.markdown('<style>.clothes-table td, .clothes-table th {text-align:center; font-family:Comic Sans MS, Arial,sans-serif; font-size:18px;}</style>', unsafe_allow_html=True)
-    table_html = '<table class="clothes-table" style="width:100%; border-collapse:collapse;">'
+    st.markdown('''
+<style>
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.modern-table th {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 700;
+    padding: 18px 12px;
+    border-bottom: 2px solid #1565c0;
+}
+.modern-table td {
+    text-align: center;
+    padding: 16px 10px;
+    border-bottom: 1px solid #e3e3e3;
+    transition: background 0.2s;
+}
+.modern-table tr:hover td {
+    background: #e3f2fd;
+}
+.modern-table tr:last-child td {
+    border-bottom: none;
+}
+</style>
+''', unsafe_allow_html=True)
+    table_html = '<table class="modern-table">'
     table_html += '<tr><th>온도 구간</th><th>추천 옷차림</th></tr>'
     for row in temp_clothes:
         table_html += f'<tr><td style="color:{row["color"]}; font-weight:bold;">{row["구간"]}</td>'
