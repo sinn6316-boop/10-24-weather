@@ -11,6 +11,7 @@ from ui_helpers import get_background_image, get_weather_emoji
 
 # 사이드바 메뉴 복원
 
+# 카드 스타일만 남기고 메뉴 선택은 selectbox로만 처리
 st.sidebar.markdown('''
 <style>
 .sidebar-menu-card {
@@ -28,46 +29,9 @@ st.sidebar.markdown('''
     text-align: center;
     letter-spacing: 1px;
 }
-.sidebar-menu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-.sidebar-menu-item {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-    padding: 16px 12px;
-    font-size: 20px;
-    font-weight: 600;
-    color: #1976d2;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-.sidebar-menu-item:hover {
-    background: #bbdefb;
-    color: #0d47a1;
-}
-.sidebar-menu-icon {
-    font-size: 26px;
-    margin-right: 12px;
-}
 </style>
 <div class="sidebar-menu-card">
     <div class="sidebar-menu-title">메뉴</div>
-    <div class="sidebar-menu-list">
-        <div class="sidebar-menu-item" onclick="window.location.hash='오늘날씨'">
-            <span class="sidebar-menu-icon">🌤️</span> 오늘날씨
-        </div>
-        <div class="sidebar-menu-item" onclick="window.location.hash='주간날씨'">
-            <span class="sidebar-menu-icon">📅</span> 주간날씨
-        </div>
-        <div class="sidebar-menu-item" onclick="window.location.hash='오늘의 옷차림'">
-            <span class="sidebar-menu-icon">👕</span> 오늘의 옷차림
-        </div>
-    </div>
 </div>
 ''', unsafe_allow_html=True)
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
@@ -174,10 +138,6 @@ elif menu == "오늘날씨":
         </div>
         <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
             <div style='font-size:80px;'>🌡️</div>
-            <div style='font-size:26px; margin-top:12px;'>온도</div>
-            <div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
-        </div>
-        <div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
             <div style='font-size:80px;'>🌡️</div>
             <div style='font-size:26px; margin-top:12px;'>체감온도</div>
             <div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
