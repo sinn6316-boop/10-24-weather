@@ -12,6 +12,7 @@ from ui_helpers import get_background_image, get_weather_emoji
 # 사이드바 메뉴 복원
 
 # 카드 스타일만 남기고 메뉴 선택은 selectbox로만 처리
+# Restore visually rich sidebar menu buttons
 st.sidebar.markdown('''
 <style>
 .sidebar-menu-card {
@@ -29,15 +30,57 @@ st.sidebar.markdown('''
     text-align: center;
     letter-spacing: 1px;
 }
+.sidebar-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.sidebar-menu-item {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    padding: 16px 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1976d2;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border: none;
+}
+.sidebar-menu-item:hover {
+    background: #bbdefb;
+    color: #0d47a1;
+}
+.sidebar-menu-icon {
+    font-size: 26px;
+    margin-right: 12px;
+}
 </style>
 <div class="sidebar-menu-card">
     <div class="sidebar-menu-title">메뉴</div>
+    <div class="sidebar-menu-list">
+        <div class="sidebar-menu-item">🌤️ 오늘날씨</div>
+        <div class="sidebar-menu-item">📅 주간날씨</div>
+        <div class="sidebar-menu-item">👕 오늘의 옷차림</div>
+    </div>
 </div>
 ''', unsafe_allow_html=True)
+
+# Streamlit button logic for menu switching
+menu_options = ["오늘날씨", "주간날씨", "오늘의 옷차림"]
+menu_icons = ["🌤️", "📅", "👕"]
+menu = None
+for i, option in enumerate(menu_options):
+        if st.sidebar.button(f"{menu_icons[i]} {option}"):
+                menu = option
+if menu is None:
+        menu = menu_options[0]
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
 
-menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"], key="sidebar_menu")
+# ...existing code...
 
 # 사용자 API 키 직접 할당
 API_KEY = "41d0805b0340385a400c764781eb7d0f"
