@@ -1,21 +1,32 @@
+# ...existing code...
+import os
+import datetime
+import streamlit as st
+import pandas as pd
+# Import feature modules
+from region_map import region_map
+from weather_api import fetch_weather, fetch_forecast
+from clothes import get_clothes_recommendation, get_clothes_emoji
+from ui_helpers import get_background_image, get_weather_emoji
+
 # 전문적인 상단 탭 메뉴와 전체 레이아웃 CSS 적용
 st.markdown('''
 <style>
 body, .main, .block-container {
-	background: #eaf6ff !important;
-	padding: 0 !important;
-	margin: 0 !important;
+    background: #eaf6ff !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 .block-container {
-	max-width: 1600px;
-	padding-top: 0 !important;
+    max-width: 1600px;
+    padding-top: 0 !important;
 }
 .stTabs [role="tablist"] {
-	justify-content: center;
-	background: #1976d2;
-	border-radius: 0 0 24px 24px;
-	box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-	margin-bottom: 0;
+    justify-content: center;
+    background: #1976d2;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    margin-bottom: 0;
 }
 .stTabs [role="tab"] {
 	color: #fff !important;
