@@ -11,7 +11,6 @@ from ui_helpers import get_background_image, get_weather_emoji
 
 # 사이드바 메뉴 복원
 
-# 카드 스타일만 남기고 메뉴 선택은 selectbox로만 처리
 # Restore visually rich sidebar menu buttons
 st.sidebar.markdown('''
 <style>
@@ -69,14 +68,15 @@ st.sidebar.markdown('''
 ''', unsafe_allow_html=True)
 
 # Streamlit button logic for menu switching
+# Use session state for menu selection
 menu_options = ["오늘날씨", "주간날씨", "오늘의 옷차림"]
 menu_icons = ["🌤️", "📅", "👕"]
-menu = None
+if "menu" not in st.session_state:
+    st.session_state.menu = menu_options[0]
 for i, option in enumerate(menu_options):
-        if st.sidebar.button(f"{menu_icons[i]} {option}"):
-                menu = option
-if menu is None:
-        menu = menu_options[0]
+    if st.sidebar.button(f"{menu_icons[i]} {option}", key=f"menu_btn_{i}"):
+        st.session_state.menu = option
+menu = st.session_state.menu
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
 st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
 
