@@ -9,177 +9,17 @@ from weather_api import fetch_weather, fetch_forecast
 from clothes import get_clothes_recommendation, get_clothes_emoji
 from ui_helpers import get_background_image, get_weather_emoji
 
-# 전문적인 상단 탭 메뉴와 전체 레이아웃 CSS 적용
-st.markdown('''
-<style>
-body, .main, .block-container {
-    background: #eaf6ff !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-.block-container {
-    max-width: 1600px;
-    padding-top: 0 !important;
-}
-.stTabs [role="tablist"] {
-    justify-content: center;
-    background: #1976d2;
-    border-radius: 0 0 24px 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    margin-bottom: 0;
-}
-.stTabs [role="tab"] {
-	color: #fff !important;
-	font-size: 22px !important;
-	font-weight: 700 !important;
-	padding: 18px 48px !important;
-	margin: 0 2px;
-	background: transparent !important;
-	border: none !important;
-}
-.stTabs [aria-selected="true"] {
-	background: #1565c0 !important;
-	color: #fff !important;
-	border-radius: 18px 18px 0 0 !important;
-	box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-}
-.stTabs [role="tabpanel"] {
-	background: #fff;
-	border-radius: 0 0 24px 24px;
-	box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-	padding: 32px 24px 24px 24px;
-	margin-top: 0;
-}
-</style>
-''', unsafe_allow_html=True)
-
-tab_labels = ["오늘날씨", "주간날씨", "오늘의 옷차림"]
-tabs = st.tabs(tab_labels)
 
 # 귀여운 상단 제목 (굵고, 귀여운 글씨체, 날씨 이모지)
-st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#1565c0; margin-bottom:0;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
+st.markdown('<h1 style="font-weight:900; font-family:Comic Sans MS, Arial, sans-serif; color:#4FC3F7;">내일 뭐 입지? 전국 날씨 예보 🌦️</h1>', unsafe_allow_html=True)
 
 # 사용자 API 키 직접 할당
 API_KEY = "41d0805b0340385a400c764781eb7d0f"
 
-with tabs[0]:
-	region_list = list(region_map.keys())
-	selected_region = st.selectbox("지역 선택", region_list, key="region_today")
-	subregion_list = list(region_map[selected_region].keys())
-	selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="subregion_today")
-	submitted_today = st.button("완료", key="btn_today")
-	if submitted_today:
-		city_en = region_map[selected_region][selected_subregion]
-		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
-		if API_KEY:
-			data = fetch_weather(city_query, API_KEY)
-			# 대구 구별: 정보가 없으면 대구 전체로 재검색
-			if selected_region == "대구" and not data:
-				data = fetch_weather("Daegu", API_KEY)
-				city_query = "Daegu"
-			elif not data:
-				data = fetch_weather(city_en, API_KEY)
-				city_query = city_en
-			if data:
-				weather_desc = data['weather'][0]['description']
-				temp = data['main'].get('temp') if 'main' in data else None
-				feels_like = data['main'].get('feels_like') if 'main' in data else None
-				humidity = data['main'].get('humidity') if 'main' in data else None
-				emoji = get_weather_emoji(weather_desc)
-				rain_amount = data.get('rain', {}).get('1h', 0)
-				today_str = datetime.datetime.now().strftime('%Y-%m-%d')
-				st.markdown(
-					f"""
-<div style='width:100%; min-width:400px; max-width:1600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 8px 32px rgba(0,0,0,0.10); padding:64px 48px;'>
-	<div style='width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:#1565c0; border-radius:24px 24px 0 0; margin-bottom:0;'>
-		<span style='font-size:38px; font-weight:700; color:#fff;'>{today_str} {selected_subregion} 날씨</span>
-	</div>
-	<div style='display:flex; justify-content:center; align-items:stretch; gap:40px; padding-top:32px;'>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>{emoji}</div>
-			<div style='font-size:26px; margin-top:12px;'>날씨</div>
-			<div style='font-size:34px; margin-top:12px;'>{weather_desc}</div>
-		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>🌡️</div>
-			<div style='font-size:26px; margin-top:12px;'>온도</div>
-			<div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
-		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>🌡️</div>
-			<div style='font-size:26px; margin-top:12px;'>체감온도</div>
-			<div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
-		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>💧</div>
-			<div style='font-size:26px; margin-top:12px;'>습도</div>
-			<div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
-		</div>
-		<div style='flex:1; max-width:320px; background:#e0f7fa; border-radius:24px; padding:48px 32px; text-align:center;'>
-			<div style='font-size:100px;'>🌧️</div>
-			<div style='font-size:30px; margin-top:18px;'>강수량</div>
-			<div style='font-size:40px; margin-top:18px;'>{rain_amount}mm</div>
-		</div>
-	</div>
-</div>
-""",
-					unsafe_allow_html=True)
+# 메뉴 선택 복원 (사이드바)
+menu = st.sidebar.selectbox("메뉴 선택", ["오늘날씨", "주간날씨", "오늘의 옷차림"])
 
-with tabs[1]:
-	region_list = list(region_map.keys())
-	selected_region = st.selectbox("지역 선택", region_list, key="region_week")
-	subregion_list = list(region_map[selected_region].keys())
-	with st.form(key="weather_form_week"):
-		selected_subregion = st.selectbox("도시/구 선택", subregion_list, key="subregion_week")
-		submitted_week = st.form_submit_button("완료", key="btn_week")
-	if submitted_week:
-		city_en = region_map[selected_region][selected_subregion]
-		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
-		if not API_KEY:
-			st.write("API 키가 없습니다. 환경 변수 또는 secrets에 API 키를 설정하세요.")
-		else:
-			weather_data = fetch_weather(city_query, API_KEY)
-			if weather_data and 'coord' in weather_data:
-				lat = weather_data['coord']['lat']
-				lon = weather_data['coord']['lon']
-				forecast_data = fetch_forecast(lat, lon, API_KEY)
-				if forecast_data and 'list' in forecast_data:
-					st.subheader(f"{selected_subregion}의 주간 날씨 예보")
-					from collections import defaultdict
-					day_dict = defaultdict(list)
-					for item in forecast_data['list']:
-						date_str = item['dt_txt'].split(' ')[0]
-						desc = item['weather'][0]['description']
-						if '비' in desc or 'rain' in desc:
-							weather_emoji = '🌧️'
-						elif '구름' in desc or 'cloud' in desc:
-							weather_emoji = '☁️'
-						elif '맑음' in desc or 'clear' in desc:
-							weather_emoji = '☀️'
-						elif '눈' in desc or 'snow' in desc:
-							weather_emoji = '❄️'
-						elif '흐림' in desc or 'overcast' in desc:
-							weather_emoji = '🌫️'
-						else:
-							weather_emoji = ''
-						day_dict[date_str].append({
-							'시간': item['dt_txt'].split(' ')[1],
-							'온도(°C)': f"{item['main']['temp']} 🌡️",
-							'체감온도(°C)': f"{item['main']['feels_like']} 🌡️",
-							'습도(%)': f"{item['main']['humidity']} 💧",
-							'날씨': f"{desc} {weather_emoji}",
-							'강수량(mm)': f"{item.get('rain', {}).get('3h', 0)} 🌧️"
-						})
-					for date, rows in list(day_dict.items())[:5]:
-						st.markdown(f"### {date}")
-						df = pd.DataFrame(rows)
-						st.dataframe(df)
-				else:
-					st.write("주간 날씨 정보를 가져올 수 없습니다.")
-			else:
-				st.write("해당 지역의 좌표 정보를 가져올 수 없습니다.")
-
-with tabs[2]:
+if menu == "오늘의 옷차림":
 	st.subheader("온도별 옷차림 추천표")
 	temp_clothes = [
 		{"구간": "-10°C 이하", "추천": "패딩, 두꺼운 코트, 목도리, 기모바지", "color": "#4FC3F7"},
@@ -234,6 +74,120 @@ with tabs[2]:
 		table_html += f'<td style="color:{row["color"]};">{row["추천"]}</td></tr>'
 	table_html += '</table>'
 	st.markdown(table_html, unsafe_allow_html=True)
+elif menu == "오늘날씨":
+	region_list = list(region_map.keys())
+	selected_region = st.selectbox("지역 선택", region_list)
+	subregion_list = list(region_map[selected_region].keys())
+	selected_subregion = st.selectbox("도시/구 선택", subregion_list)
+	submitted_today = st.button("완료")
+	if submitted_today:
+		city_en = region_map[selected_region][selected_subregion]
+		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
+		if API_KEY:
+			data = fetch_weather(city_query, API_KEY)
+			if selected_region == "대구" and not data:
+				data = fetch_weather("Daegu", API_KEY)
+				city_query = "Daegu"
+			elif not data:
+				data = fetch_weather(city_en, API_KEY)
+				city_query = city_en
+			if data:
+				weather_desc = data['weather'][0]['description']
+				temp = data['main'].get('temp') if 'main' in data else None
+				feels_like = data['main'].get('feels_like') if 'main' in data else None
+				humidity = data['main'].get('humidity') if 'main' in data else None
+				emoji = get_weather_emoji(weather_desc)
+				rain_amount = data.get('rain', {}).get('1h', 0)
+				today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+				st.markdown(
+					f"""
+<div style='width:100%; min-width:400px; max-width:1600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 8px 32px rgba(0,0,0,0.10); padding:64px 48px;'>
+	<div style='width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:#1565c0; border-radius:24px 24px 0 0; margin-bottom:0;'>
+		<span style='font-size:38px; font-weight:700; color:#fff;'>{today_str} {selected_subregion} 날씨</span>
+	</div>
+	<div style='display:flex; justify-content:center; align-items:stretch; gap:40px; padding-top:32px;'>
+		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+			<div style='font-size:80px;'>{emoji}</div>
+			<div style='font-size:26px; margin-top:12px;'>날씨</div>
+			<div style='font-size:34px; margin-top:12px;'>{weather_desc}</div>
+		</div>
+		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+			<div style='font-size:80px;'>🌡️</div>
+			<div style='font-size:26px; margin-top:12px;'>온도</div>
+			<div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
+		</div>
+		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+			<div style='font-size:80px;'>🌡️</div>
+			<div style='font-size:26px; margin-top:12px;'>체감온도</div>
+			<div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
+		</div>
+		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
+			<div style='font-size:80px;'>💧</div>
+			<div style='font-size:26px; margin-top:12px;'>습도</div>
+			<div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
+		</div>
+		<div style='flex:1; max-width:320px; background:#e0f7fa; border-radius:24px; padding:48px 32px; text-align:center;'>
+			<div style='font-size:100px;'>🌧️</div>
+			<div style='font-size:30px; margin-top:18px;'>강수량</div>
+			<div style='font-size:40px; margin-top:18px;'>{rain_amount}mm</div>
+		</div>
+	</div>
+</div>
+""",
+					unsafe_allow_html=True)
+elif menu == "주간날씨":
+	region_list = list(region_map.keys())
+	selected_region = st.selectbox("지역 선택", region_list)
+	subregion_list = list(region_map[selected_region].keys())
+	with st.form(key="weather_form_week"):
+		selected_subregion = st.selectbox("도시/구 선택", subregion_list)
+		submitted_week = st.form_submit_button("완료")
+	if submitted_week:
+		city_en = region_map[selected_region][selected_subregion]
+		city_query = f"{selected_region},{city_en}" if selected_region and city_en else city_en
+		if not API_KEY:
+			st.write("API 키가 없습니다. 환경 변수 또는 secrets에 API 키를 설정하세요.")
+		else:
+			weather_data = fetch_weather(city_query, API_KEY)
+			if weather_data and 'coord' in weather_data:
+				lat = weather_data['coord']['lat']
+				lon = weather_data['coord']['lon']
+				forecast_data = fetch_forecast(lat, lon, API_KEY)
+				if forecast_data and 'list' in forecast_data:
+					st.subheader(f"{selected_subregion}의 주간 날씨 예보")
+					from collections import defaultdict
+					day_dict = defaultdict(list)
+					for item in forecast_data['list']:
+						date_str = item['dt_txt'].split(' ')[0]
+						desc = item['weather'][0]['description']
+						if '비' in desc or 'rain' in desc:
+							weather_emoji = '🌧️'
+						elif '구름' in desc or 'cloud' in desc:
+							weather_emoji = '☁️'
+						elif '맑음' in desc or 'clear' in desc:
+							weather_emoji = '☀️'
+						elif '눈' in desc or 'snow' in desc:
+							weather_emoji = '❄️'
+						elif '흐림' in desc or 'overcast' in desc:
+							weather_emoji = '🌫️'
+						else:
+							weather_emoji = ''
+						day_dict[date_str].append({
+							'시간': item['dt_txt'].split(' ')[1],
+							'온도(°C)': f"{item['main']['temp']} 🌡️",
+							'체감온도(°C)': f"{item['main']['feels_like']} 🌡️",
+							'습도(%)': f"{item['main']['humidity']} 💧",
+							'날씨': f"{desc} {weather_emoji}",
+							'강수량(mm)': f"{item.get('rain', {}).get('3h', 0)} 🌧️"
+						})
+					for date, rows in list(day_dict.items())[:5]:
+						st.markdown(f"### {date}")
+						df = pd.DataFrame(rows)
+						st.dataframe(df)
+				else:
+					st.write("주간 날씨 정보를 가져올 수 없습니다.")
+			else:
+				st.write("해당 지역의 좌표 정보를 가져올 수 없습니다.")
 import os
 import datetime
 import streamlit as st
