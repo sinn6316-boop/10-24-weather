@@ -99,6 +99,28 @@ elif menu == "오늘날씨":
 				emoji = get_weather_emoji(weather_desc)
 				rain_amount = data.get('rain', {}).get('1h', 0)
 				today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+
+				# 아침 한마디 메시지 생성
+				morning_msg = ""
+				if temp is not None:
+					try:
+						t = float(temp)
+						if t <= 0:
+							morning_msg = "오늘은 많이 추워요! 따뜻하게 입고 감기 조심하세요 ☃️"
+						elif t <= 10:
+							morning_msg = "쌀쌀한 아침입니다. 옷 든든히 챙기고 힘내세요! 💪"
+						elif t <= 20:
+							morning_msg = "상쾌한 날씨! 오늘도 좋은 하루 보내세요 😊"
+						elif t <= 27:
+							morning_msg = "활기찬 하루 시작! 가벼운 옷차림으로 산뜻하게 출발하세요 🌤️"
+						else:
+							morning_msg = "더운 하루가 예상돼요! 시원하게 보내세요 ☀️"
+					except Exception:
+						morning_msg = "오늘도 힘내세요!"
+				else:
+					morning_msg = "오늘도 힘내세요!"
+
+				st.info(morning_msg)
 				st.markdown(
 					f"""
 <div style='width:100%; min-width:400px; max-width:1600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 8px 32px rgba(0,0,0,0.10); padding:64px 48px;'>
