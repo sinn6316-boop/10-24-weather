@@ -123,35 +123,66 @@ elif menu == "오늘날씨":
 				st.info(morning_msg)
 				st.markdown(
 					f"""
-<div style='width:100%; min-width:400px; max-width:1600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 8px 32px rgba(0,0,0,0.10); padding:64px 48px;'>
-	<div style='width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:#1565c0; border-radius:24px 24px 0 0; margin-bottom:0;'>
-		<span style='font-size:38px; font-weight:700; color:#fff;'>{today_str} {selected_subregion} 날씨</span>
+<style>
+@media (max-width: 600px) {{
+	.weather-card {{
+		padding: 16px 4px !important;
+		border-radius: 18px !important;
+	}}
+	.weather-title {{
+		font-size: 22px !important;
+		height: 48px !important;
+		border-radius: 12px 12px 0 0 !important;
+	}}
+	.weather-row {{
+		flex-direction: column !important;
+		gap: 12px !important;
+		padding-top: 12px !important;
+	}}
+	.weather-block {{
+		max-width: 100% !important;
+		padding: 12px !important;
+	}}
+	.weather-emoji {{
+		font-size: 38px !important;
+	}}
+	.weather-label {{
+		font-size: 16px !important;
+	}}
+	.weather-value {{
+		font-size: 20px !important;
+	}}
+}}
+</style>
+<div class='weather-card' style='width:100%; min-width:200px; max-width:600px; margin:0 auto; background:#eaf6ff; border-radius:48px; box-shadow:0 4px 16px rgba(0,0,0,0.10); padding:32px 12px;'>
+	<div class='weather-title' style='width:100%; height:60px; display:flex; align-items:center; justify-content:center; background:#1565c0; border-radius:18px 18px 0 0; margin-bottom:0;'>
+		<span style='font-size:28px; font-weight:700; color:#fff;'>{today_str} {selected_subregion} 날씨</span>
 	</div>
-	<div style='display:flex; justify-content:center; align-items:stretch; gap:40px; padding-top:32px;'>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>{emoji}</div>
-			<div style='font-size:26px; margin-top:12px;'>날씨</div>
-			<div style='font-size:34px; margin-top:12px;'>{weather_desc}</div>
+	<div class='weather-row' style='display:flex; justify-content:center; align-items:stretch; gap:18px; padding-top:18px; flex-wrap:wrap;'>
+		<div class='weather-block' style='flex:1; min-width:120px; max-width:160px; background:#f7f7f7; border-radius:12px; padding:18px; text-align:center;'>
+			<div class='weather-emoji' style='font-size:48px;'>{emoji}</div>
+			<div class='weather-label' style='font-size:18px; margin-top:8px;'>날씨</div>
+			<div class='weather-value' style='font-size:22px; margin-top:8px;'>{weather_desc}</div>
 		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>🌡️</div>
-			<div style='font-size:26px; margin-top:12px;'>온도</div>
-			<div style='font-size:34px; margin-top:12px;'>{temp}°C</div>
+		<div class='weather-block' style='flex:1; min-width:120px; max-width:160px; background:#f7f7f7; border-radius:12px; padding:18px; text-align:center;'>
+			<div class='weather-emoji' style='font-size:48px;'>🌡️</div>
+			<div class='weather-label' style='font-size:18px; margin-top:8px;'>온도</div>
+			<div class='weather-value' style='font-size:22px; margin-top:8px;'>{temp}°C</div>
 		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>🌡️</div>
-			<div style='font-size:26px; margin-top:12px;'>체감온도</div>
-			<div style='font-size:34px; margin-top:12px;'>{feels_like}°C</div>
+		<div class='weather-block' style='flex:1; min-width:120px; max-width:160px; background:#f7f7f7; border-radius:12px; padding:18px; text-align:center;'>
+			<div class='weather-emoji' style='font-size:48px;'>🌡️</div>
+			<div class='weather-label' style='font-size:18px; margin-top:8px;'>체감온도</div>
+			<div class='weather-value' style='font-size:22px; margin-top:8px;'>{feels_like}°C</div>
 		</div>
-		<div style='flex:1; max-width:220px; background:#f7f7f7; border-radius:18px; padding:32px; text-align:center;'>
-			<div style='font-size:80px;'>💧</div>
-			<div style='font-size:26px; margin-top:12px;'>습도</div>
-			<div style='font-size:34px; margin-top:12px;'>{humidity}%</div>
+		<div class='weather-block' style='flex:1; min-width:120px; max-width:160px; background:#f7f7f7; border-radius:12px; padding:18px; text-align:center;'>
+			<div class='weather-emoji' style='font-size:48px;'>💧</div>
+			<div class='weather-label' style='font-size:18px; margin-top:8px;'>습도</div>
+			<div class='weather-value' style='font-size:22px; margin-top:8px;'>{humidity}%</div>
 		</div>
-		<div style='flex:1; max-width:320px; background:#e0f7fa; border-radius:24px; padding:48px 32px; text-align:center;'>
-			<div style='font-size:100px;'>🌧️</div>
-			<div style='font-size:30px; margin-top:18px;'>강수량</div>
-			<div style='font-size:40px; margin-top:18px;'>{rain_amount}mm</div>
+		<div class='weather-block' style='flex:1; min-width:120px; max-width:160px; background:#e0f7fa; border-radius:14px; padding:18px; text-align:center;'>
+			<div class='weather-emoji' style='font-size:54px;'>🌧️</div>
+			<div class='weather-label' style='font-size:18px; margin-top:8px;'>강수량</div>
+			<div class='weather-value' style='font-size:22px; margin-top:8px;'>{rain_amount}mm</div>
 		</div>
 	</div>
 </div>
